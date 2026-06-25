@@ -1,0 +1,26 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t hello-devops:${{ github.sha }} .
+
+      - name: Run tests
+        run: |
+          docker run -d -p 8000:8000 --name test-app hello-devops:${{ github.sha }}
+          sleep 3
+          curl -f http://localhost:8000/health
+          docker stop test-app && docker rm test-app
+
+      - name: Success
+        run: echo "✅ Build et tests réussis - SHA ${{ github.sha }}"
