@@ -15,7 +15,8 @@ spec:
     spec:
       containers:
         - name: hello-devops
-          image: ghcr.io/alaindongmo/hello-devops:latest
+          image: hello-devops:local
+          imagePullPolicy: Never
           ports:
             - containerPort: 8000
           readinessProbe:
